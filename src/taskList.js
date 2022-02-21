@@ -1,30 +1,32 @@
-import Task from './task.js';
-
 export default class TaskList {
   constructor(tasks) {
-    this.tasks = tasks.map((el) => new Task(el.description, el.completed, el.index));
+    this.tasks = tasks.map((el) => {
+      const task = {};
+      task.description = el.description;
+      task.completed = el.completed;
+      task.index = el.index;
+      return task;
+    });
   }
 
   show = () => {
     const toDoList = document.querySelector('.items');
-    toDoList.innerHTML = '';
+    while (toDoList.firstChild) {
+      toDoList.removeChild(toDoList.firstChild);
+    }
     this.tasks.sort((a, b) => a.index - b.index).map((el) => {
       const task = document.createElement('div');
       task.classList.add('task');
       if (el.completed) task.classList.add('completed');
       task.innerHTML = `<input type="checkbox" ${el.completed ? 'checked' : ''} /> <input type='text' value='${el.description}'/>  <i class="fa fa-trash remove"></i>`;
       toDoList.appendChild(task);
-      task.querySelector('input[type="checkbox"]').addEventListener('change', () => {
-        this.toggleTask(el.index);
-      });
+      task.querySelector('input[type="checkbox"]').addEventListener('change', () => this.toggleTask(el.index));
       task.querySelector('input[type="text"]').addEventListener('blur', (e) => {
         this.tasks[el.index - 1].description = e.target.value;
         this.save();
         this.show();
       });
-      task.querySelector('.remove').addEventListener('click', () => {
-        this.removeTask(el.index);
-      });
+      task.querySelector('.remove').addEventListener('click', () => this.removeTask(el.index));
       return null;
     });
   }

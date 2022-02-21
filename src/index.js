@@ -1,29 +1,31 @@
 import TaskList from './taskList.js';
 import './style.css';
-import Task from './task.js';
 import './interaction.js';
 
 const tasks = (localStorage.tasks ? JSON.parse(localStorage.tasks) : []);
 
 const list = new TaskList(tasks);
-window.addEventListener('load', () => {
-  list.show();
-});
+window.addEventListener('load', () => list.show());
 
 const addTask = () => {
   const txt = document.querySelector('.txtNew');
   const description = txt.value;
   if (description === '') {
-    alert('Please type your task description');
+    const message = document.createElement('p');
+    message.classList.add('error');
+    message.innerHTML = 'Please type your task description';
+    const body = document.querySelector('body');
+    body.prepend(message);
+    setInterval(() => {
+      message.remove();
+    }, 2000);
   } else {
-    list.addTask(new Task(description));
+    list.addTask({ description, completed: false, index: -1 });
     txt.value = '';
   }
 };
 
-document.querySelector('.add').addEventListener('click', () => {
-  addTask();
-});
+document.querySelector('.add').addEventListener('click', () => addTask());
 
 document.querySelector('.txtNew').addEventListener('keyup', (e) => {
   if (e.keyCode === 13) { // Enter key
@@ -31,6 +33,4 @@ document.querySelector('.txtNew').addEventListener('keyup', (e) => {
   }
 });
 
-document.querySelector('.remove').addEventListener('click', () => {
-  list.clearCompletedTasks();
-});
+document.querySelector('.remove').addEventListener('click', () => list.clearCompletedTasks());

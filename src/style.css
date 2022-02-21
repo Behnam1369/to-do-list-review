@@ -23,6 +23,12 @@ body {
   color: gray;
 }
 
+.error {
+  color: red;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .to-do-list > .footer {
   justify-content: center;
   background-color: whitesmoke;
